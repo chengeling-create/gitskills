@@ -9,11 +9,12 @@ public class Password {
         boolean isRunning = true;
         exit();
 
+        while (isRunning) {
             int choice = scanner.nextInt();
             scanner.nextLine();
 
             switch (choice) {
-                case 1://加密
+                case 1:
                     System.out.println("==============================");
                     System.out.println("欢迎使用密码管理系统");
                     System.out.println("==============================");
@@ -36,7 +37,7 @@ public class Password {
                     break;
 
 
-                case 2://解密
+                case 2:
                     System.out.println("==============================");
                     System.out.println("欢迎使用密码管理系统");
                     System.out.println("==============================");
