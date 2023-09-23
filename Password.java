@@ -1,13 +1,43 @@
+import javax.swing.*;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 import java.util.Random;
 
-public class Password {
+public class Password extends JFrame{
+    public void launchFrame(){
+        this.setTitle("菜单页面");
+        this.setSize(400, 300);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    }
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean isRunning = true;
         exit();
+
+        Password f=new Password();
+        f.launchFrame();
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("请选择操作");
+
+        JMenuItem sub1 = new JMenuItem("加密");
+        JMenuItem sub2 = new JMenuItem("解密");
+        JMenuItem sub3 = new JMenuItem("判断密码强度");
+        JMenuItem sub4 = new JMenuItem("密码生成");
+
+        fileMenu.add(sub1);
+        fileMenu.add(sub2);
+        fileMenu.add(sub3);
+        fileMenu.add(sub4);
+
+        menuBar.add(fileMenu);
+
+        f.setJMenuBar(menuBar);
+        f.setVisible(true);
+
 
         while (isRunning) {
             int choice = scanner.nextInt();
@@ -23,19 +53,33 @@ public class Password {
                     char[] c = input.toCharArray();
                     char temp;
                     ArrayList m = new ArrayList();
-                    //每个字符的ASCII码加上它在字符串中的位置(1开始)和偏移值3
-		    for (int i = 0; i < c.length; i++) {
-                        temp = (char) (c[i] + (i + 1) + 3);
-                        m.add(temp);
+                    boolean password=false;
+                    for (int i = 0; i < c.length; i++) {
+                        if (c[i]>='a'&&c[i]<='z'||c[i]>='A'&&c[i]<='Z'||c[i]>='0'&&c[i]<='9') {
+                            password = true;
+                        }
+			                else{
+                                password = false;
+                                break;
+                            }
                     }
-		    //将字符串的第一位和最后一位调换顺序
-                    Collections.swap(m, 0, m.toArray().length - 1);
-		    //将字符串反转
-                    Collections.reverse(m);
-                    System.out.print("加密后的结果是： ");
-                    for (int i = 0; i < m.size(); i++) {
-                        System.out.print(m.get(i));
+                    if (password=true){
+                                //每个字符的ASCII码加上它在字符串中的位置(1开始)和偏移值3
+                        for (int i = 0; i < c.length; i++) {
+                                    temp = (char) (c[i] + (i + 1) + 3);
+                                    m.add(temp);
+                                }
+                        //将字符串的第一位和最后一位调换顺序
+                                Collections.swap(m, 0, m.toArray().length - 1);
+                        //将字符串反转
+                                Collections.reverse(m);
+                                System.out.print("加密后的结果是： ");
+                                for (int i = 0; i < m.size(); i++) {
+                                    System.out.print(m.get(i));
+                                }
                     }
+                    if (password=false)
+                        System.out.println("密码输入错误");
                     System.out.println("");
                     break;
 
@@ -100,24 +144,21 @@ public class Password {
                     System.out.println("==============================");
                     System.out.println("欢迎使用密码管理系统");
                     System.out.println("==============================");
-                    System.out.print("密码生成长度：");
+                    System.out.print("密码生成长度（大于等于8）：");
                     int num = scanner.nextInt();
-                    Random sc=new Random(num);
-                    String UPPER_WORD_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                    String LOWER_WORD_CHARS = "abcdefghijklmnopqrstuvwxyz";
-                    String NUMBER_CHARS = "0123456789";
-
-            }
-
-            scanner = new Scanner(System.in);
-            System.out.println("按任意键返回");
-            String input = scanner.nextLine();
-            if (input.length() > 0) {
-                System.exit(0);
-            }
-            exit();
+                    String passwords = PasswordGenerator.generatePassword(num);
+                    System.out.println("生成的密码: " + passwords);
+                    }
+                    scanner = new Scanner(System.in);
+                    System.out.println("按任意键返回");
+                    String input = scanner.nextLine();
+                    if (input.length() > 0) {
+                        System.exit(0);
+                    }
+                    exit();
         }
     }
+
     public static void exit() {
         System.out.println("==============================");
         System.out.println("欢迎使用密码管理系统");
@@ -132,3 +173,60 @@ public class Password {
         System.out.print("请输入选项序号：");
     }
 }
+
+class PasswordGenerator {
+        private static final String LOWER_CASE = "abcdefghijklmnopqrstuvwxyz";
+        private static final String UPPER_CASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private static final String DIGITS = "0123456789";
+
+        public  static String generatePassword(int length) {
+            StringBuilder password = new StringBuilder();
+
+            // 添加至少一个小写字母、一个大写字母和一个数字
+            password.append(getRandomChar(LOWER_CASE));
+            password.append(getRandomChar(UPPER_CASE));
+            password.append(getRandomChar(DIGITS));
+
+            // 添加随机字符，直到达到所需的长度
+            while (password.length() < length) {
+                String charSet = getRandomCharSet();
+                password.append(getRandomChar(charSet));
+            }
+
+            // 打乱密码中的字符顺序
+            shuffle(password);
+
+            return password.toString();
+        }
+
+        private  static char getRandomChar(String charSet) {
+            Random random = new Random();
+            int index = random.nextInt(charSet.length());
+            return charSet.charAt(index);
+        }
+
+        private  static String getRandomCharSet() {
+            Random random = new Random();
+            int randomIndex = random.nextInt(3);
+            switch (randomIndex) {
+                case 0:
+                    return LOWER_CASE;
+                case 1:
+                    return UPPER_CASE;
+                case 2:
+                    return DIGITS;
+                default:
+                    return "";
+            }
+        }
+
+        private static void shuffle(StringBuilder password) {
+            Random random = new Random();
+            for (int i = password.length() - 1; i > 0; i--) {
+                int index = random.nextInt(i + 1);
+                char temp = password.charAt(index);
+                password.setCharAt(index, password.charAt(i));
+                password.setCharAt(i, temp);
+            }
+        }
+    }
