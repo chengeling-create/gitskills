@@ -14,7 +14,7 @@ public class Password {
             scanner.nextLine();
 
             switch (choice) {
-                case 1:
+                case 1://加密
                     System.out.println("==============================");
                     System.out.println("欢迎使用密码管理系统");
                     System.out.println("==============================");
@@ -23,11 +23,14 @@ public class Password {
                     char[] c = input.toCharArray();
                     char temp;
                     ArrayList m = new ArrayList();
-                    for (int i = 0; i < c.length; i++) {
+                    //每个字符的ASCII码加上它在字符串中的位置(1开始)和偏移值3
+		    for (int i = 0; i < c.length; i++) {
                         temp = (char) (c[i] + (i + 1) + 3);
                         m.add(temp);
                     }
+		    //将字符串的第一位和最后一位调换顺序
                     Collections.swap(m, 0, m.toArray().length - 1);
+		    //将字符串反转
                     Collections.reverse(m);
                     System.out.print("加密后的结果是： ");
                     for (int i = 0; i < m.size(); i++) {
@@ -37,7 +40,7 @@ public class Password {
                     break;
 
 
-                case 2:
+                case 2://解密
                     System.out.println("==============================");
                     System.out.println("欢迎使用密码管理系统");
                     System.out.println("==============================");
@@ -45,16 +48,19 @@ public class Password {
                     String input1 = scanner.nextLine();
                     char[] d = input1.toCharArray();
                     char temp1;
+		    //将字符串反转
                     for (int i=0;i<d.length/2;i++){
                         temp1=d[i];
                         d[i]=d[d.length-1-i];
                         d[d.length-1-i]=temp1;
                     }
                     char temp2;
+		    //将字符串的第一位和最后一位调换顺序
                     temp2=d[0];
                     d[0]=d[d.length-1];
                     d[d.length-1]=temp2;
                     ArrayList n = new ArrayList();
+		    //将每个字符的ASCII码减去它在字符串中的位置(1开始)和偏移值3
                     for (int i = 0; i < d.length; i++) {
                         temp1 = (char)(d[i] - (i + 1) - 3);
                         n.add(temp1);
